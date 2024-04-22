@@ -1,0 +1,99 @@
+---
+layout: default
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Entry</title>
+</head>
+<body>
+
+<div id="app">
+  <header>
+    <h1>{{ page.title }}</h1>
+  </header>
+
+  <main>
+    <section id="entryContainer">
+      <header>
+       
+
+      <div id="buttons">
+        <button id="editButton">Edit</button>
+        <button id="saveButton" style="display: none;">Save</button>
+        <button id="cancelButton" style="display: none;">Cancel</button>
+      </div>
+    </section>
+
+     <script>
+        // Fetch data from backend
+        fetch('http://localhost:8000/diary') // Assuming your backend API endpoint is '/api/entry'
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Render entry data
+                renderEntry(data);
+            })
+            .catch(error => {
+                console.error('Error fetching entry:', error);
+            });
+
+        function renderEntry(data) {
+            // Assuming data structure: { title: 'Entry Title', content: 'Entry Content' }
+            const entryContainer = document.getElementById('entry-container');
+            const entryHTML = `
+                <h1>${data.title}</h1>
+                <p>${data.content}</p>
+            `;
+            entryContainer.innerHTML = entryHTML;
+        }
+    </script>
+  </main>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const editButton = document.getElementById('editButton');
+    const saveButton = document.getElementById('saveButton');
+    const cancelButton = document.getElementById('cancelButton');
+
+    editButton.addEventListener('click', function () {
+      editMode(true);
+    });
+
+    cancelButton.addEventListener('click', function () {
+      editMode(false);
+    });
+
+    saveButton.addEventListener('click', function () {
+      // Handle save functionality
+      editMode(false);
+      // Send data to backend for updating Jekyll post
+    });
+
+    function editMode(isEditing) {
+      const entryContainer = document.getElementById('entryContainer');
+      const buttons = document.getElementById('buttons');
+
+      if (isEditing) {
+        entryContainer.contentEditable = true;
+        entryContainer.classList.add('editing');
+        buttons.style.display = 'flex';
+      } else {
+        entryContainer.contentEditable = false;
+        entryContainer.classList.remove('editing');
+        buttons.style.display = 'none';
+      }
+    }
+  });
+</script>
+
+</body>
+</html>
