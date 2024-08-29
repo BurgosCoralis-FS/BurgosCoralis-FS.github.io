@@ -1,5 +1,5 @@
 ---
-title: 🐈
+title: 🐹
 date: 2024-08-28 00:00:00 -0400
 comments: true
 categories: [숙제, 일기]
